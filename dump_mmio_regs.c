@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <unistd.h>
-#include "nva/nva.h"
-#include "ampere/ga100/dev_boot.h"
+#include "include/nva/nva.h"
+#include "include/ampere/ga100/dev_boot.h"
 
 #define print_bits(x)                                            \
   do {                                                           \
@@ -50,21 +50,30 @@ int main(int argc, char **argv) {
     int cnum = 0;
     int mask = 0;
 
+    uint32_t write_value = 0;
+    uint32_t write_addr = 0;
+
     if (nva_init()) {
             fprintf (stderr, "PCI init failure!\n");
             return 1;
     }
 
-    while ((c = getopt (argc, argv, "c:mbrFDR")) != -1)
+    while ((c = getopt (argc, argv, "c:b:m:w")) != -1)
     switch (c) {
             case 'c':
                     sscanf(optarg, "%d", &cnum);
                     break;
+            case 'b':
+                    mask |= NVIDIA_MMIO_MASK_PBUS;
+                    break;
             case 'm':
                     mask |= NVIDIA_MMIO_MASK_PMC;
                     break;
-            case 'b':
-                    mask |= NVIDIA_MMIO_MASK_PBUS;
+            case 'w':
+                    sscanf(optarg, "%ul %ul", &write_addr, &write_value);
+                    fprintf (stdout, "0x%x 0x%x.\n", write_addr, write_value);
+                    break;
+            default:
                     break;
     }
 
@@ -77,9 +86,10 @@ int main(int argc, char **argv) {
             else
                     fprintf (stderr, "No cards found.\n");
             return 1;
+    } else {
+        fprintf(stdout, "Card Number: %d\n", cnum);
     }
 
-    // nva_wr32(cnum, 0x0, 0x172000a1);
     
     if (mask & NVIDIA_MMIO_MASK_PMC) {
             uint32_t pmc_boot_0  = nva_rd32(cnum, NV_PMC_BOOT_0);
@@ -87,6 +97,7 @@ int main(int argc, char **argv) {
             uint32_t pmc_boot_2  = nva_rd32(cnum, NV_PMC_BOOT_2);
             uint32_t pmc_boot_42 = nva_rd32(cnum, NV_PMC_BOOT_42);
             uint32_t pmc_enable  = nva_rd32(cnum, NV_PMC_ENABLE);
+
             printf("PMC:\n");
             printf("\tNV_PMC_BOOT_0   : 0x%08x\n",  pmc_boot_0);
             printf("\tNV_PMC_BOOT_1   : 0x%08x\n",  pmc_boot_1);

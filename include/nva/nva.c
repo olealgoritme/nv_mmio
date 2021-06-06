@@ -23,7 +23,7 @@
         struct pci_id_match nv_gpu_match[] = {
         {0x104a, 0x0009, PCI_MATCH_ANY, PCI_MATCH_ANY, 0, 0},
         {0x12d2, PCI_MATCH_ANY, PCI_MATCH_ANY, PCI_MATCH_ANY, 0x30000, 0xffff0000},
-        {0x10de, 0x1e02, PCI_MATCH_ANY, PCI_MATCH_ANY, 0x30000, 0xffff0000},
+        {0x10de, PCI_MATCH_ANY, PCI_MATCH_ANY, PCI_MATCH_ANY, 0x30000, 0xffff0000},
         {0x10de, PCI_MATCH_ANY, PCI_MATCH_ANY, PCI_MATCH_ANY, 0x48000, 0xffffff00},
         };
 
