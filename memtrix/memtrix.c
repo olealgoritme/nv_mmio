@@ -36,17 +36,21 @@ int main(int argc, char **argv) {
     char *PHYS_MEM_FILE = "/dev/mem";
 
     if(argc < 2) {
-        // ./mem 0xc8000000 w = reads 32bits
-        // ./mem 0xc8000000 d = reads 64bits
-        // ./mem 0xc8000000 w*10 = reads (32bits * 10) PS! For zsh use "w*10"
-        // ./mem 0xc8000000 w 0x1337 = writes 16bits (0x1337) to specified address
-        fprintf(stderr, "Trixxing with PHYS_MEM\n"
+        fprintf(stderr, "Memtrix with PHYS_MEM\n"
                 "\tUsage:\t%s phys_mem_addr type[*count] [data]\n"
                 "\toffset  : offset into pci memory region to act upon\n"
                 "\ttype    : read size: [b]yte, [h]alfword, [w]ord, [d]ouble-word\n"
                 "\t*count  : number of blocks to read: w*10 reads (32bits * 10)\n"
                 "\tdata    : data to be written\n\n",
                 argv[0]);
+
+        fprintf(stderr, "\nExamples:\n"
+                "\t./memtrix 0xc8000000 = reads 32bits\n"
+                "\t./memtrix 0xc8000000 w = reads 32bits\n"
+                "\t./memtrix 0xc8000000 d = reads 64bits\n"
+                "\t./memtrix 0xc8000000 w*10 = reads (32bits * 10) PS! For zsh use \"w*10\"\n"
+                "\t./memtrix 0xc8000013 w 0x1337 = writes 16bits (0x1337) to specified address\n"
+                );
         exit(1);
     }
     // arg1
