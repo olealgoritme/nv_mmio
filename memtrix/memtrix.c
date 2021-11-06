@@ -20,6 +20,15 @@
                 __LINE__, __FILE__, errno, strerror(errno)); exit(1);    \
                 } while(0)
 
+#define print_bits(x)                                            \
+  do {                                                           \
+    unsigned a__ = (x);                                          \
+    size_t bits__ = sizeof(x) * 8;                               \
+    printf("BITS : ");                                           \
+    while (bits__--) putchar(a__ &(1U << bits__) ? '1' : '0');   \
+    putchar('\n');                                               \
+  } while (0)
+
 int main(int argc, char **argv) {
     int fd;
     void *map_base, *virt_addr;
@@ -116,9 +125,10 @@ int main(int argc, char **argv) {
                 break;
     }
 
-    if (verbose)
-    printf("Value at offset 0x%X (%p): 0x%0*lX\n", (int) offset + i*type_width, virt_addr, type_width*2, read_result);
-    else {
+    if (verbose) {
+        printf("Value at offset 0x%X (%p): 0x%0*lX\n", (int) offset + i*type_width, virt_addr, type_width*2, read_result);
+        print_bits(read_result);
+    } else {
     if (read_result != prev_read_result || i == 0) {
         printf("0x%04X: 0x%0*lX\n", (int)(offset + i*type_width), type_width*2, read_result);
         read_result_dupped = 0;

@@ -1,0 +1,2 @@
+(host gpu without vgpu)
+pmc_enable: 01010010000000000000000000000000
